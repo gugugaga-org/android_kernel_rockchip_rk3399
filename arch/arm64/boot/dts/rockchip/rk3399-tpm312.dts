@@ -1,0 +1,269 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * RK3399 TPM312 board (Android 12 / kernel 4.19 port)
+ *
+ * Board-level data in rk3399-tpm312-{board,pinctrl,soc}.dtsi was extracted
+ * from the production Android 9 firmware (rkupdate image) DTB, which is the
+ * authoritative hardware description for this board.
+ */
+
+/dts-v1/;
+
+#include <dt-bindings/pwm/pwm.h>
+#include <dt-bindings/input/input.h>
+#include "rk3399.dtsi"
+#include "rk3399-android.dtsi"
+#include "rk3399-opp.dtsi"
+
+/ {
+	model = "RK3399 TPM312";
+	compatible = "rk3399,tpm312", "rockchip,rk3399";
+
+	aliases {
+		ethernet0 = &gmac;
+		mmc0 = &sdhci;
+	};
+
+	chosen {
+		bootargs = "earlycon=uart8250,mmio32,0xff1a0000 swiotlb=1 console=ttyFIQ0 coherent_pool=1m";
+	};
+
+#include "rk3399-tpm312-board.dtsi"
+};
+
+#include "rk3399-tpm312-pinctrl.dtsi"
+#include "rk3399-tpm312-soc.dtsi"
+
+&cpu_l0 {
+	cpu-supply = <&vdd_cpu_l>;
+};
+
+&cpu_l1 {
+	cpu-supply = <&vdd_cpu_l>;
+};
+
+&cpu_l2 {
+	cpu-supply = <&vdd_cpu_l>;
+};
+
+&cpu_l3 {
+	cpu-supply = <&vdd_cpu_l>;
+};
+
+&cpu_b0 {
+	cpu-supply = <&vdd_cpu_b>;
+};
+
+&cpu_b1 {
+	cpu-supply = <&vdd_cpu_b>;
+};
+
+&gpu {
+	status = "okay";
+	mali-supply = <&vdd_gpu>;
+};
+
+&emmc_phy {
+	status = "okay";
+};
+
+/* GPIO4_A0 (I2S0_MCLK) is claimed by the es8316 codec's i2s-8ch-mclk
+ * pinctrl; the production firmware i2s0-2ch-bus has no GPIO4_A0 either,
+ * otherwise i2s0 probe fails with -EBUSY on pin 128. */
+&i2s0_2ch_bus {
+	rockchip,pins =
+		<3 RK_PD0 1 &pcfg_pull_none>,
+		<3 RK_PD1 1 &pcfg_pull_none>,
+		<3 RK_PD2 1 &pcfg_pull_none>,
+		<3 RK_PD3 1 &pcfg_pull_none>,
+		<3 RK_PD7 1 &pcfg_pull_none>;
+};
+
+&i2s0 {
+	status = "okay";
+	rockchip,i2s-broken-burst-len;
+	rockchip,playback-channels = <2>;
+	rockchip,capture-channels = <2>;
+	#sound-dai-cells = <0>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2s0_2ch_bus>;
+};
+
+&hdmi {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&hdmi_i2c_xfer>, <&hdmi_cec>;
+	ddc-i2c-scl-high-time-ns = <9625>;
+	ddc-i2c-scl-low-time-ns = <10000>;
+	rockchip,phy-table =
+		<0x046cf710 0x8009 0x0004 0x0272
+		 0x09d5b340 0x802b 0x0004 0x0209
+		 0x11b3dc40 0x8039 0x0005 0x028d
+		 0x2367b880 0x8039 0x0000 0x019d
+		 0x00000000 0x0000 0x0000 0x0000>;
+};
+
+&hdmi_dp_sound {
+	status = "okay";
+};
+
+&i2s2 {
+	status = "okay";
+};
+
+/* 115200 console baud (U-Boot CONFIG_BAUDRATE matches) */
+&fiq_debugger {
+	rockchip,baudrate = <115200>;
+};
+
+&u2phy0 {
+	status = "okay";
+
+	u2phy0_otg: otg-port {
+		vbus-supply = <&vcc5v0_otg0>;
+		status = "okay";
+	};
+
+	u2phy0_host: host-port {
+		phy-supply = <&vcc5v0_host0>;
+		status = "okay";
+	};
+};
+
+&u2phy1 {
+	status = "okay";
+
+	u2phy1_otg: otg-port {
+		vbus-supply = <&vcc5v0_otg1>;
+		status = "okay";
+	};
+
+	u2phy1_host: host-port {
+		phy-supply = <&vcc5v0_host1>;
+		status = "okay";
+	};
+};
+
+&tcphy0 {
+	status = "okay";
+};
+
+&tcphy1 {
+	status = "okay";
+};
+
+&usbdrd3_0 {
+	status = "okay";
+};
+
+&usbdrd_dwc3_0 {
+	dr_mode = "otg";
+	extcon = <&u2phy0>;
+	status = "okay";
+};
+
+&usbdrd3_1 {
+	status = "okay";
+};
+
+&usbdrd_dwc3_1 {
+	dr_mode = "host";
+	status = "okay";
+};
+
+/* Display: production firmware drives HDMI from VOPB only, VOPL disabled.
+ * rk3399-android.dtsi enables both VOPs and both HDMI input endpoints,
+ * which creates a phantom CRTC; commits to it then wait forever for
+ * vblank and SurfaceFlinger watchdog-resets the framework. */
+&vopb {
+	status = "okay";
+	assigned-clocks = <&cru DCLK_VOP0_DIV>;
+	assigned-clock-parents = <&cru PLL_VPLL>;
+	rockchip,grf = <&grf>;
+};
+
+&vopb_mmu {
+	status = "okay";
+};
+
+&vopl {
+	status = "disabled";
+};
+
+&hdmi_in_vopb {
+	status = "okay";
+};
+
+&hdmi_in_vopl {
+	status = "disabled";
+};
+
+/* EHCI/OHCI USB2.0 host controllers (okay in production firmware) */
+&usb_host0_ehci {
+	status = "okay";
+};
+
+&usb_host0_ohci {
+	status = "okay";
+};
+
+&usb_host1_ehci {
+	status = "okay";
+};
+
+&usb_host1_ohci {
+	status = "okay";
+};
+
+&io_domains {
+	status = "okay";
+	audio-supply = <&vcca1v8_codec>;
+	bt656-supply = <&vcc1v8_dvp>;
+	gpio1830-supply = <&vcc_3v0>;
+	sdmmc-supply = <&vcc_sd>;
+};
+
+&pmu_io_domains {
+	status = "okay";
+	pmu1830-supply = <&vcc_3v0>;
+};
+
+&rockchip_suspend {
+	status = "okay";
+	rockchip,sleep-debug-en = <1>;
+	rockchip,virtual-poweroff = <0>;
+	rockchip,sleep-mode-config = <0xde>;
+	rockchip,wakeup-config = <0x4884>;
+	rockchip,pwm-regulator-config = <0x08>;
+	rockchip,power-ctrl =
+		<&gpio1 17 GPIO_ACTIVE_HIGH>,
+		<&gpio1 14 GPIO_ACTIVE_HIGH>;
+};
+
+&soc_thermal {
+	trips {
+		cpu_warm: cpu_warm {
+			temperature = <60000>;
+			hysteresis = <2000>;
+			type = "active";
+		};
+
+		cpu_hot: cpu_hot {
+			temperature = <75000>;
+			hysteresis = <2000>;
+			type = "active";
+		};
+	};
+
+	cooling-maps {
+		map3 {
+			trip = <&cpu_warm>;
+			cooling-device = <&fan0 1 5>;
+		};
+
+		map4 {
+			trip = <&cpu_hot>;
+			cooling-device = <&fan0 6 9>;
+		};
+	};
+};
