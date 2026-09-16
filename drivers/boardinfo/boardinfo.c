@@ -71,6 +71,10 @@ static int board_info_probe(struct platform_device *pdev)
 
 int get_board_model(void)
 {
+	/* TPM312 has no board-info node in its production device tree. */
+	if (!model)
+		return -1;
+
 	if (!strcmp("rk3288", model))
 		return 3288;
 	else if (!strcmp("rk3399", model))
