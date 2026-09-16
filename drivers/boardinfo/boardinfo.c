@@ -71,6 +71,10 @@ static int board_info_probe(struct platform_device *pdev)
 
 int get_board_model(void)
 {
+	/* No board-info node in DT (e.g. TPM312): model is never set. */
+	if (!model)
+		return -1;
+
 	if (!strcmp("rk3288", model))
 		return 3288;
 	else if (!strcmp("rk3399", model))

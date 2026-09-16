@@ -27,6 +27,7 @@ obj-$(CONFIG_SND_SOC_ROCKCHIP_VAD) += snd-soc-rockchip-vad.o
 ccflags-y += -DROCKCHIP_AUDIO
 
 snd-soc-rockchip-hdmi-objs := rockchip_hdmi.o
+snd-soc-rockchip-hdmi-dp-objs := rockchip_hdmi_dp.o
 snd-soc-rockchip-max98090-objs := rockchip_max98090.o
 snd-soc-rockchip-multicodecs-objs := rockchip_multicodecs.o
 snd-soc-rockchip-rt5645-objs := rockchip_rt5645.o
@@ -44,6 +45,7 @@ snd-soc-justboom-dac-objs := justboom-dac.o
 snd-soc-justboom-digi-objs := justboom-digi.o
 
 obj-$(CONFIG_SND_SOC_ROCKCHIP_HDMI) += snd-soc-rockchip-hdmi.o
+obj-$(CONFIG_SND_SOC_ROCKCHIP_HDMI) += snd-soc-rockchip-hdmi-dp.o
 obj-$(CONFIG_SND_SOC_ROCKCHIP_MAX98090) += snd-soc-rockchip-max98090.o
 obj-$(CONFIG_SND_SOC_ROCKCHIP_MULTICODECS) += snd-soc-rockchip-multicodecs.o
 obj-$(CONFIG_SND_SOC_ROCKCHIP_RT5645) += snd-soc-rockchip-rt5645.o

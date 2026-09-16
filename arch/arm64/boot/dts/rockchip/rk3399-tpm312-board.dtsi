@@ -1,0 +1,338 @@
+/* from production firmware DTB: /rockchip-key */
+rk_key: rockchip-key {
+	compatible = "rockchip,key";
+	status = "okay";
+	io-channels = <&saradc 1>;
+	vol-up-key {
+		linux,code = <0x73>;
+		label = "volume up";
+		rockchip,adc_value = <0x01>;
+	};
+	vol-down-key {
+		linux,code = <0x72>;
+		label = "volume down";
+		rockchip,adc_value = <0xaa>;
+	};
+	power-key {
+		gpios = <&gpio0 0x05 0x01>;
+		linux,code = <0x74>;
+		label = "power";
+		gpio-key,wakeup;
+	};
+	menu-key {
+		linux,code = <0x3b>;
+		label = "menu";
+		rockchip,adc_value = <0x2ea>;
+	};
+	home-key {
+		linux,code = <0x66>;
+		label = "home";
+		rockchip,adc_value = <0x163>;
+	};
+	back-key {
+		linux,code = <0x9e>;
+		label = "back";
+		rockchip,adc_value = <0x230>;
+	};
+	camera-key {
+		linux,code = <0xd4>;
+		label = "camera";
+		rockchip,adc_value = <0x1c2>;
+	};
+};
+
+/* from production firmware DTB: /pwm-fan */
+fan0: pwm-fan {
+	compatible = "pwm-fan";
+	cooling-levels = <0x00 0x3f 0x4f 0x5f 0x6f 0x7f 0x9f 0xbf 0xdf 0xff>;
+	#cooling-cells = <0x02>;
+	cooling-min-state = <0x00>;
+	cooling-max-state = <0x09>;
+	pwms = <&pwm1 0x00 0x1f400 0x00>;
+	status = "okay";
+};
+
+/* from production firmware DTB: /pwm-gpio */
+gpio_pwm0: pwm-gpio {
+	compatible = "pwm-gpio";
+	#pwm-cells = <0x03>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&gpio_pwm0_pin>;
+	pwm-gpio = <&gpio4 0x03 0x00>;
+};
+
+/* from production firmware DTB: /gpio-keys */
+gpio_keys_extra: gpio-keys-extra {
+	compatible = "gpio-keys";
+	#address-cells = <0x01>;
+	#size-cells = <0x00>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&gpio_button1>;
+	power-key {
+		debounce-interval = <0x96>;
+		gpios = <&gpio4 0x06 0x00>;
+		linux,code = <0x74>;
+		label = "power";
+		gpio-key,wakeup;
+		wakeup-source;
+	};
+};
+
+/* from production firmware DTB: /vcc1v8-s0 */
+vcc1v8_s0: vcc1v8-s0 {
+	compatible = "regulator-fixed";
+	regulator-name = "vcc1v8_s0";
+	regulator-min-microvolt = <0x1b7740>;
+	regulator-max-microvolt = <0x1b7740>;
+	regulator-always-on;
+};
+
+/* from production firmware DTB: /vcc5v0-sys */
+vcc_sys: vcc5v0-sys {
+	regulator-boot-on;
+	pinctrl-0 = <&vcc5sys_gpio>;
+	gpio = <&gpio3 0x1d 0x00>;
+	regulator-name = "vcc_sys";
+	enable-active-high;
+	compatible = "regulator-fixed";
+	pinctrl-names = "default";
+	regulator-min-microvolt = <0x4c4b40>;
+	regulator-max-microvolt = <0x4c4b40>;
+	regulator-always-on;
+};
+
+/* from production firmware DTB: /vcc-phy-regulator */
+vcc_phy: vcc-phy-regulator {
+	compatible = "regulator-fixed";
+	regulator-name = "vcc_phy";
+	regulator-always-on;
+	regulator-boot-on;
+};
+
+/* from production firmware DTB: /vcc3v3-sys */
+vcc3v3_sys: vcc3v3-sys {
+	compatible = "regulator-fixed";
+	regulator-name = "vcc3v3_sys";
+	regulator-min-microvolt = <0x325aa0>;
+	regulator-max-microvolt = <0x325aa0>;
+	regulator-always-on;
+	regulator-boot-on;
+};
+
+/* from production firmware DTB: /vcc5v0-host0-regulator */
+vcc5v0_host0: vcc5v0-host0-regulator {
+	pinctrl-0 = <&host0_vbus_drv>;
+	gpio = <&gpio4 0x1a 0x00>;
+	regulator-name = "vcc5v0_host0";
+	enable-active-high;
+	compatible = "regulator-fixed";
+	pinctrl-names = "default";
+	regulator-always-on;
+};
+
+/* from production firmware DTB: /vcc5v0-host1-regulator */
+vcc5v0_host1: vcc5v0-host1-regulator {
+	pinctrl-0 = <&host1_vbus_drv>;
+	gpio = <&gpio3 0x1e 0x00>;
+	regulator-name = "vcc5v0_host1";
+	enable-active-high;
+	compatible = "regulator-fixed";
+	pinctrl-names = "default";
+	regulator-always-on;
+};
+
+/* from production firmware DTB: /vcc5v0-otg0-regulator */
+vcc5v0_otg0: vcc5v0-otg0-regulator {
+	pinctrl-0 = <&otg0_vbus_drv>;
+	gpio = <&gpio1 0x00 0x00>;
+	regulator-name = "vcc5v0_otg0";
+	compatible = "regulator-fixed";
+	pinctrl-names = "default";
+	regulator-min-microvolt = <0x4c4b40>;
+	regulator-max-microvolt = <0x4c4b40>;
+	enable-active-high;
+	regulator-always-on;
+};
+
+/* from production firmware DTB: /vcc5v0-otg1-regulator */
+vcc5v0_otg1: vcc5v0-otg1-regulator {
+	pinctrl-0 = <&otg1_vbus_drv>;
+	gpio = <&gpio4 0x1d 0x00>;
+	regulator-name = "vcc5v0_otg1";
+	compatible = "regulator-fixed";
+	pinctrl-names = "default";
+	regulator-min-microvolt = <0x4c4b40>;
+	regulator-max-microvolt = <0x4c4b40>;
+	enable-active-high;
+	regulator-always-on;
+};
+
+/* from production firmware DTB: /vdd-log */
+vdd_log: vdd-log {
+	compatible = "pwm-regulator";
+	pwms = <&pwm3 0x00 0x61a8 0x01>;
+	regulator-name = "vdd_log";
+	regulator-min-microvolt = <800000>;
+	regulator-max-microvolt = <0x155cc0>;
+	regulator-init-microvolt = <0xe7ef0>;
+	regulator-always-on;
+	regulator-boot-on;
+	rockchip,pwm_id = <0x03>;
+	rockchip,pwm_voltage = <0xe7ef0>;
+};
+
+/* from production firmware DTB: /external-gmac-clock */
+clkin_gmac: external-gmac-clock {
+	compatible = "fixed-clock";
+	clock-frequency = <0x7735940>;
+	clock-output-names = "clkin_gmac";
+	#clock-cells = <0x00>;
+};
+
+/* from production firmware DTB: /es8316-sound */
+es8316-sound {
+	compatible = "simple-audio-card";
+	simple-audio-card,format = "i2s";
+	simple-audio-card,name = "rockchip,es8316-codec";
+	simple-audio-card,mclk-fs = <0x100>;
+	simple-audio-card,widgets = "Microphone", "Mic Jack", "Headphone", "Headphone Jack";
+	simple-audio-card,routing = "Headphone Jack", "HPOL", "Headphone Jack", "HPOR";
+	simple-audio-card,cpu {
+		sound-dai = <&i2s0>;
+		system-clock-frequency = <12288000>;
+	};
+	simple-audio-card,codec {
+		sound-dai = <&es8316>;
+		system-clock-frequency = <12288000>;
+	};
+};
+
+/* from production firmware DTB: /leds */
+leds {
+	compatible = "gpio-leds";
+	pinctrl-names = "default";
+	pinctrl-0 = <&leds_pins>;
+	power5v-led {
+		gpios = <&gpio1 0x17 0x00>;
+		default-state = "on";
+		label = "power_5v_run";
+	};
+};
+
+/* from production firmware DTB: /vcc-4g */
+vcc_4g: vcc-4g {
+	regulator-boot-on;
+	pinctrl-0 = <&vcc_4g_gpio>;
+	gpio = <&gpio0 0x02 0x00>;
+	regulator-name = "vcc_4g";
+	enable-active-high;
+	compatible = "regulator-fixed";
+	pinctrl-names = "default";
+};
+
+/* from production firmware DTB: /vcc-wifi */
+vcc_wifi: vcc-wifi {
+	pinctrl-0 = <&wifi_host_wake_l>;
+	gpio = <&gpio0 0x03 0x00>;
+	regulator-name = "vcc_wifi";
+	enable-active-high;
+	compatible = "regulator-fixed";
+	pinctrl-names = "default";
+	regulator-always-on;
+};
+
+/* from production firmware DTB: /vcc-usb1-en */
+vcc_usb1_en: vcc-usb1-en {
+	compatible = "regulator-fixed";
+	enable-active-high;
+	gpio = <&gpio4 0x1c 0x00>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&usb1_en_pin>;
+	regulator-name = "vcc_usb1_en";
+	regulator-always-on;
+	regulator-boot-on;
+	vin-supply = <&vcc3v3_sys>;
+};
+
+/* from production firmware DTB: /vcc-usb2-en */
+vcc_usb2_en: vcc-usb2-en {
+	compatible = "regulator-fixed";
+	enable-active-high;
+	gpio = <&gpio1 0x03 0x00>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&usb2_en_pin>;
+	regulator-name = "vcc_usb2_en";
+	regulator-always-on;
+	regulator-boot-on;
+	vin-supply = <&vcc3v3_sys>;
+};
+
+/* from production firmware DTB: /vcc-usb3-en */
+vcc_usb3_en: vcc-usb3-en {
+	compatible = "regulator-fixed";
+	enable-active-high;
+	gpio = <&gpio4 0x1e 0x00>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&usb3_en_pin>;
+	regulator-name = "vcc_usb3_en";
+	regulator-always-on;
+	regulator-boot-on;
+	vin-supply = <&vcc3v3_sys>;
+};
+
+/* from production firmware DTB: /vcc-usb4-en */
+vcc_usb4_en: vcc-usb4-en {
+	compatible = "regulator-fixed";
+	enable-active-high;
+	gpio = <&gpio4 0x15 0x00>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&usb4_en_pin>;
+	regulator-name = "vcc_usb4_en";
+	regulator-always-on;
+	regulator-boot-on;
+	vin-supply = <&vcc3v3_sys>;
+};
+
+/* from production firmware DTB: /vcc-usb5-en */
+vcc_usb5_en: vcc-usb5-en {
+	compatible = "regulator-fixed";
+	enable-active-high;
+	gpio = <&gpio4 0x18 0x00>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&usb5_en_pin>;
+	regulator-name = "vcc_usb5_en";
+	regulator-always-on;
+	regulator-boot-on;
+	vin-supply = <&vcc3v3_sys>;
+};
+
+/* from production firmware DTB: /vcc-usb6-en */
+vcc_usb6_en: vcc-usb6-en {
+	compatible = "regulator-fixed";
+	enable-active-high;
+	gpio = <&gpio1 0x02 0x00>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&usb6_en_pin>;
+	regulator-name = "vcc_usb6_en";
+	regulator-always-on;
+	regulator-boot-on;
+	vin-supply = <&vcc3v3_sys>;
+};
+
+/* from production firmware DTB: /vcc-wk2-rst */
+vcc_wk2_rst: vcc-wk2-rst {
+	regulator-boot-on;
+	pinctrl-0 = <&wk2_rst_pin>;
+	gpio = <&gpio2 0x12 0x01>;
+	regulator-name = "vcc_wk2_rst";
+	enable-active-low;
+	compatible = "regulator-fixed";
+	pinctrl-names = "default";
+	regulator-always-on;
+	vin-supply = <&vcc3v3_sys>;
+};
+
+/* from production firmware DTB: /test-power */
+test-power {
+	status = "okay";
+};
