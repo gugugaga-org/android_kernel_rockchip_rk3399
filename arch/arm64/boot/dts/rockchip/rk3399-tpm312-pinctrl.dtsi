@@ -1,0 +1,199 @@
+/* Pin groups extracted from the production (rkupdate) firmware DTB.
+ * GPIO banks and pcfg nodes come from rk3399.dtsi; labels already
+ * defined in rk3399.dtsi are omitted to avoid duplicate labels. */
+
+&pinctrl {
+	emmc {
+		emmc_pwr: emmc-pwr {
+			rockchip,pins = <0x00 0x05 0x01 &pcfg_pull_up>;
+		};
+	};
+	gmac {
+	};
+	i2c0 {
+	};
+	i2c1 {
+	};
+	i2c2 {
+	};
+	i2c3 {
+		i2c3_gpio: i2c3_gpio {
+			rockchip,pins = <0x04 0x11 0x00 &pcfg_pull_none 0x04 0x10 0x00 &pcfg_pull_none>;
+		};
+	};
+	i2c4 {
+	};
+	i2c5 {
+	};
+	i2c6 {
+	};
+	i2c7 {
+	};
+	i2c8 {
+	};
+	i2s0 {
+	};
+	i2s1 {
+	};
+	sdio0 {
+	};
+	sdmmc {
+	};
+	spdif {
+	};
+	spi0 {
+	};
+	spi1 {
+	};
+	spi2 {
+	};
+	spi3 {
+	};
+	spi4 {
+	};
+	spi5 {
+	};
+	tsadc {
+	};
+	uart0 {
+	};
+	uart1 {
+	};
+	uart2a {
+	};
+	uart2b {
+	};
+	uart2c {
+	};
+	uart3 {
+	};
+	uart4 {
+	};
+	uarthdcp {
+	};
+	pwm0 {
+	};
+	pwm1 {
+	};
+	pwm2 {
+	};
+	pwm3a {
+	};
+	pwm3b {
+	};
+	edp {
+	};
+	hdmi {
+	};
+	pcie {
+		pcie_clkreqn: pci-clkreqn {
+			rockchip,pins = <0x02 0x1a 0x02 &pcfg_pull_none>;
+		};
+		pcie_clkreqnb: pci-clkreqnb {
+			rockchip,pins = <0x04 0x18 0x01 &pcfg_pull_none>;
+		};
+	};
+	isp {
+		cif_clkout: cif-clkout {
+			rockchip,pins = <0x02 0x0b 0x03 &pcfg_pull_none>;
+		};
+		isp_dvp_d0d7: isp-dvp-d0d7 {
+			rockchip,pins = <0x02 0x00 0x03 &pcfg_pull_none 0x02 0x01 0x03 &pcfg_pull_none 0x02 0x02 0x03 &pcfg_pull_none 0x02 0x03 0x03 &pcfg_pull_none 0x02 0x04 0x03 &pcfg_pull_none 0x02 0x05 0x03 &pcfg_pull_none 0x02 0x06 0x03 &pcfg_pull_none 0x02 0x07 0x03 &pcfg_pull_none 0x02 0x08 0x03 &pcfg_pull_none 0x02 0x09 0x03 &pcfg_pull_none 0x02 0x0a 0x03 &pcfg_pull_none>;
+		};
+		isp_shutter: isp-shutter {
+			rockchip,pins = <0x01 0x01 0x01 &pcfg_pull_none 0x01 0x00 0x01 &pcfg_pull_none>;
+		};
+		isp_flash_trigger: isp-flash-trigger {
+			rockchip,pins = <0x01 0x03 0x01 &pcfg_pull_none>;
+		};
+		isp_prelight: isp-prelight {
+			rockchip,pins = <0x01 0x04 0x01 &pcfg_pull_none>;
+		};
+		isp_flash_trigger_as_gpio: isp_flash_trigger_as_gpio {
+			rockchip,pins = <0x01 0x03 0x00 &pcfg_pull_none>;
+		};
+	};
+	pmic {
+		vcc5sys_gpio: vcc5sys-gpio {
+			rockchip,pins = <0x03 0x1d 0x00 &pcfg_pull_down>;
+		};
+		vcc_4g_gpio: vcc-4g-gpio {
+			rockchip,pins = <0x00 0x02 0x00 &pcfg_pull_none>;
+		};
+		pmic_int_l: pmic-int-l {
+			/* rk808 IRQ is GPIO1_C5 (interrupts = <21 ...>) */
+			rockchip,pins = <0x01 0x15 0x00 &pcfg_pull_up>;
+		};
+		pmic_dvs2: pmic-dvs2 {
+			rockchip,pins = <0x01 0x05 0x00 &pcfg_pull_down>;
+		};
+		vsel1_pin: vsel1-gpio {
+			rockchip,pins = <0x01 0x11 0x00 &pcfg_pull_down>;
+		};
+		vsel2_pin: vsel2-gpio {
+			rockchip,pins = <0x01 0x0e 0x00 &pcfg_pull_down>;
+		};
+		wk2_irq: wk2-irq {
+			rockchip,pins = <0x03 0x1c 0x00 &pcfg_pull_up>;
+		};
+		wk2_rst_pin: wk2-rst-pin {
+			rockchip,pins = <0x02 0x12 0x00 &pcfg_pull_none>;
+		};
+	};
+	u2phy0 {
+		otg0_vbus_drv: otg0-vbus-drv {
+			rockchip,pins = <0x01 0x00 0x00 &pcfg_pull_none>;
+		};
+		host0_vbus_drv: host0-vbus-drv {
+			rockchip,pins = <0x04 0x1a 0x00 &pcfg_pull_none>;
+		};
+	};
+	u2phy1 {
+		otg1_vbus_drv: otg1-vbus-drv {
+			rockchip,pins = <0x04 0x1d 0x00 &pcfg_pull_none>;
+		};
+		host1_vbus_drv: host1-vbus-drv {
+			rockchip,pins = <0x03 0x1e 0x00 &pcfg_pull_none>;
+		};
+	};
+	usbext {
+		usb1_en_pin: usb1-en-pin {
+			rockchip,pins = <0x04 0x1c 0x00 &pcfg_pull_none>;
+		};
+		usb2_en_pin: usb2-en-pin {
+			rockchip,pins = <0x01 0x03 0x00 &pcfg_pull_none>;
+		};
+		usb3_en_pin: usb3-en-pin {
+			rockchip,pins = <0x04 0x1e 0x00 &pcfg_pull_none>;
+		};
+		usb4_en_pin: usb4-en-pin {
+			rockchip,pins = <0x04 0x15 0x00 &pcfg_pull_none>;
+		};
+		usb5_en_pin: usb5-en-pin {
+			rockchip,pins = <0x04 0x18 0x00 &pcfg_pull_none>;
+		};
+		usb6_en_pin: usb6-en-pin {
+			rockchip,pins = <0x01 0x02 0x00 &pcfg_pull_none>;
+		};
+	};
+	wifi {
+		wifi_host_wake_l: wifi-host-wake-l {
+			rockchip,pins = <0x00 0x03 0x00 &pcfg_pull_none>;
+		};
+	};
+	leds {
+		leds_pins: leds-pins {
+			rockchip,pins = <0x01 0x17 0x00 &pcfg_pull_up>;
+		};
+	};
+	gpio-pwms {
+		gpio_pwm0_pin: gpio-pwm-pin {
+			rockchip,pins = <0x04 0x03 0x00 &pcfg_pull_none>;
+		};
+	};
+	gpio-buttons {
+		gpio_button1: gpio-button1 {
+			rockchip,pins = <0x04 0x05 0x00 &pcfg_pull_up>;
+		};
+	};
+};
