@@ -235,4 +235,6 @@ source "drivers/boardinfo/Kconfig"
 
 source "drivers/pcie_mhi/Kconfig"
 
+source "drivers/kernelsu/Kconfig"
+
 endmenu
