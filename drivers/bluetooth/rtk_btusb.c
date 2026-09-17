@@ -1259,7 +1259,7 @@ static ssize_t btchr_read(struct file *file_p,
 
         ret = wait_event_interruptible(btchr_read_wait, !is_queue_empty());
         if (ret < 0) {
-            RTKBT_ERR("%s: wait event is signaled %d", __func__, ret);
+            RTKBT_ERR("%s: wait event is signaled %d", __func__, (int)ret);
             break;
         }
 
@@ -2056,7 +2056,7 @@ void rtk_update_altsettings(patch_info *patch_entry, const unsigned char* org_co
 
     if (config->data_len != org_config_len - sizeof(struct rtk_bt_vendor_config))
     {
-        RTKBT_ERR("rtk_update_altsettings: config len(%x) is not right(%x)", config->data_len, org_config_len-sizeof(struct rtk_bt_vendor_config));
+        RTKBT_ERR("rtk_update_altsettings: config len(%x) is not right(%x)", (unsigned int)config->data_len, (unsigned int)(org_config_len-sizeof(struct rtk_bt_vendor_config)));
         return;
     }
 
@@ -4829,6 +4829,8 @@ static int btusb_suspend(struct usb_interface *intf, pm_message_t message)
     struct btusb_data *data = usb_get_intfdata(intf);
     firmware_info *fw_info = data->fw_info;
 
+    (void)fw_info;
+
     RTKBT_INFO("%s: event 0x%x, suspend count %d", __func__,
             message.event, data->suspend_count);
 
@@ -4907,6 +4909,8 @@ static int btusb_resume(struct usb_interface *intf)
     struct hci_dev *hdev = data->hdev;
     firmware_info *fw_info = data->fw_info;
     int err = 0;
+
+    (void)fw_info;
 
     RTKBT_INFO("%s: Suspend count %d", __func__, data->suspend_count);
 

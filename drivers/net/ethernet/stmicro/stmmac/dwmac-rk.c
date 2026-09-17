@@ -2151,6 +2151,15 @@ void rk_get_eth_addr(void *priv, unsigned char *addr)
 	unsigned char ethaddr[ETH_ALEN * MAX_ETH] = {0};
 	int ret, id = bsp_priv->bus_id;
 
+	/*
+	 * The bootloader may already have provided a stable MAC address via the
+	 * device tree 'local-mac-address' property (read from vendor storage).
+	 * Keep it instead of falling back to the devinfo/vendor/random path;
+	 * otherwise a fresh random address would be used on every boot.
+	 */
+	if (is_valid_ether_addr(addr))
+		goto out;
+
 	rk_devinfo_get_eth_mac(addr);
 	if (is_valid_ether_addr(addr))
 		goto out;
