@@ -560,6 +560,13 @@ KBUILD_AFLAGS	+= $(call cc-option,-fno-PIE)
 # and from include/config/auto.conf.cmd to detect the compiler upgrade.
 CC_VERSION_TEXT = $(shell $(CC) --version | head -n 1)
 
+# Tag the release string with the compiler name and version so that the
+# running kernel can be identified from `uname -r` or the boot banner without
+# unpacking the boot image.
+CC_TAG_NAME := $(if $(findstring clang,$(CC_VERSION_TEXT)),clang,gcc)
+CC_TAG_VER := $(shell $(CC) -dumpversion 2>/dev/null)
+EXTRAVERSION := $(EXTRAVERSION)-$(CC_TAG_NAME)$(CC_TAG_VER)
+
 ifeq ($(config-targets),1)
 # ===========================================================================
 # *config targets only - make sure prerequisites are updated, and descend
