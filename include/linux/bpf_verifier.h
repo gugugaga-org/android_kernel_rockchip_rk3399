@@ -51,6 +51,7 @@ struct bpf_reg_state {
 		 *   PTR_TO_MAP_VALUE_OR_NULL
 		 */
 		struct bpf_map *map_ptr;
+		u32 mem_size; /* for PTR_TO_MEM | PTR_TO_MEM_OR_NULL */
 
 		/* Max size from any of the above. */
 		unsigned long raw;
@@ -61,8 +62,11 @@ struct bpf_reg_state {
 	 * offset, so they can share range knowledge.
 	 * For PTR_TO_MAP_VALUE_OR_NULL this is used to share which map value we
 	 * came from, when one is tested for != NULL.
+	 * For PTR_TO_MEM_OR_NULL this identifies the allocation to release.
 	 */
 	u32 id;
+	/* Resource reference identity retained across nullable checks. */
+	u32 ref_obj_id;
 	/* For scalar types (SCALAR_VALUE), this represents our knowledge of
 	 * the actual value.
 	 * For pointer types, this represents the variable part of the offset
@@ -105,6 +109,11 @@ struct bpf_stack_state {
 	u8 slot_type[BPF_REG_SIZE];
 };
 
+struct bpf_reference_state {
+	int id;
+	int insn_idx;
+};
+
 /* state of the program:
  * type of all registers and stack info
  */
@@ -122,7 +131,9 @@ struct bpf_func_state {
 	 */
 	u32 subprogno;
 
-	/* should be second to last. See copy_func_state() */
+	/* Keep dynamic state fields last; copy_func_state() depends on this. */
+	int acquired_refs;
+	struct bpf_reference_state *refs;
 	int allocated_stack;
 	struct bpf_stack_state *stack;
 };

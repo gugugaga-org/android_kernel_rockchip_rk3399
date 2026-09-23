@@ -26,6 +26,7 @@
 #include <linux/filter.h>
 #include <linux/version.h>
 #include <linux/kernel.h>
+#include <linux/poll.h>
 #include <linux/idr.h>
 #include <linux/cred.h>
 #include <linux/timekeeping.h>
@@ -394,6 +395,29 @@ static ssize_t bpf_dummy_write(struct file *filp, const char __user *buf,
 	return -EINVAL;
 }
 
+static int bpf_map_mmap(struct file *filp, struct vm_area_struct *vma)
+{
+	struct bpf_map *map = filp->private_data;
+
+	if (!map->ops->map_mmap)
+		return -EOPNOTSUPP;
+	if (!(vma->vm_flags & VM_SHARED))
+		return -EINVAL;
+
+	vma->vm_flags &= ~VM_MAYEXEC;
+	return map->ops->map_mmap(map, vma);
+}
+
+static __poll_t bpf_map_poll(struct file *filp, struct poll_table_struct *pts)
+{
+	struct bpf_map *map = filp->private_data;
+
+	if (map->ops->map_poll)
+		return map->ops->map_poll(map, filp, pts);
+
+	return EPOLLERR;
+}
+
 const struct file_operations bpf_map_fops = {
 #ifdef CONFIG_PROC_FS
 	.show_fdinfo	= bpf_map_show_fdinfo,
@@ -401,6 +425,8 @@ const struct file_operations bpf_map_fops = {
 	.release	= bpf_map_release,
 	.read		= bpf_dummy_read,
 	.write		= bpf_dummy_write,
+	.mmap		= bpf_map_mmap,
+	.poll		= bpf_map_poll,
 };
 
 int bpf_map_new_fd(struct bpf_map *map, int flags)
@@ -726,10 +752,14 @@ static int map_lookup_elem(union bpf_attr *attr)
 			ptr = map->ops->map_lookup_elem_sys_only(map, key);
 		else
 			ptr = map->ops->map_lookup_elem(map, key);
-		if (ptr)
+		if (IS_ERR_OR_NULL(ptr)) {
+			rcu_read_unlock();
+			err = ptr ? PTR_ERR(ptr) : -ENOENT;
+		} else {
 			memcpy(value, ptr, value_size);
-		rcu_read_unlock();
-		err = ptr ? 0 : -ENOENT;
+			rcu_read_unlock();
+			err = 0;
+		}
 	}
 	this_cpu_dec(bpf_prog_active);
 	preempt_enable();
